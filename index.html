@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Auth Service - Frontend</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>Auth Service (Frontend)</h1>
+      <nav>
+        <button id="btn-show-login" class="nav-btn">Iniciar sesión</button>
+        <button id="btn-show-register" class="nav-btn">Registrarse</button>
+        <button id="btn-logout" class="nav-btn hidden">Cerrar sesión</button>
+      </nav>
+    </header>
+
+    <section id="messages" class="messages" aria-live="polite"></section>
+
+    <!-- LOGIN -->
+    <section id="login-section" class="card">
+      <h2>Iniciar sesión</h2>
+      <form id="login-form">
+        <label>
+          Usuario
+          <input type="text" name="usuario" id="login-usuario" required />
+        </label>
+
+        <label>
+          Contraseña
+          <input type="password" name="contraseña" id="login-contraseña" required />
+        </label>
+
+        <button type="submit" class="btn">Entrar</button>
+      </form>
+    </section>
+
+    <!-- REGISTER -->
+    <section id="register-section" class="card hidden">
+      <h2>Registrarse</h2>
+      <form id="register-form">
+        <label>
+          Usuario
+          <input type="text" name="usuario" id="reg-usuario" required />
+        </label>
+
+        <label>
+          Contraseña
+          <input type="password" name="contraseña" id="reg-contraseña" required minlength="6" />
+        </label>
+
+        <label>
+          Confirmar contraseña
+          <input type="password" id="reg-contraseña2" required minlength="6" />
+        </label>
+
+        <button type="submit" class="btn">Crear cuenta</button>
+      </form>
+    </section>
+
+    <!-- DASHBOARD / ÁREA PROTEGIDA -->
+    <section id="dashboard-section" class="card hidden">
+      <h2>Panel de Usuario</h2>
+      <p>Bienvenido, <span id="user-name"></span></p>
+      <p>Token (guardado en localStorage):</p>
+      <pre id="user-token" class="token-box"></pre>
+
+      <div class="actions">
+        <button id="btn-refresh" class="btn">Refrescar datos</button>
+      </div>
+
+      <div id="protected-data" class="protected-data"></div>
+    </section>
+
+    <footer class="footer">
+      <small>Frontend simple para el servicio de autenticación — Proyecto SENA</small>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

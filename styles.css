@@ -1,0 +1,121 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --accent: #2563eb;
+  --muted: #6b7280;
+  --success: #16a34a;
+  --danger: #dc2626;
+}
+
+* { box-sizing: border-box; }
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  margin: 0;
+  background: var(--bg);
+  color: #111827;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.container {
+  max-width: 900px;
+  margin: 28px auto;
+  padding: 16px;
+}
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom: 18px;
+}
+
+.header h1 { margin: 0; font-size: 1.25rem; }
+nav { display:flex; gap:8px; }
+
+.nav-btn {
+  background:transparent;
+  border:1px solid #e5e7eb;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+  margin-bottom: 16px;
+}
+
+.hidden { display: none; }
+
+label {
+  display:flex;
+  flex-direction:column;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+input[type="text"], input[type="password"] {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e7eb;
+  margin-top: 6px;
+  font-size: 1rem;
+}
+
+.btn {
+  background: var(--accent);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.messages {
+  margin-bottom: 12px;
+  min-height: 28px;
+}
+
+.message {
+  display:inline-block;
+  padding:8px 12px;
+  border-radius: 8px;
+  color: white;
+  font-weight:600;
+}
+
+.success { background: var(--success); }
+.error { background: var(--danger); }
+.info { background: #0ea5e9; }
+
+.token-box {
+  background:#0f172a;
+  color:#fff;
+  padding:8px;
+  border-radius:6px;
+  overflow-x:auto;
+  max-width:100%;
+}
+
+.actions { margin-top:12px; }
+.protected-data {
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  background:#f8fafc;
+  border:1px dashed #e5e7eb;
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width:600px) {
+  .container { padding:12px; }
+  .header { flex-direction: column; gap:8px; align-items:flex-start; }
+}
