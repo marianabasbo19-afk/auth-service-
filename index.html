@@ -1,84 +1,230 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Auth Service - Frontend</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth Service - Registro e Inicio de Sesión</title>
+  <style>
+    /* ======== RESET GENERAL ======== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+
+    /* ======== CONTENEDOR PRINCIPAL ======== */
+    .container {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      width: 380px;
+      padding: 40px 35px;
+      text-align: center;
+      transition: all 0.4s ease;
+      animation: aparecer 0.8s ease;
+    }
+
+    @keyframes aparecer {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #444;
+      font-size: 1.8em;
+      font-weight: 600;
+    }
+
+    /* ======== CAMPOS ======== */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 5px rgba(106,17,203,0.3);
+      outline: none;
+    }
+
+    /* ======== BOTONES ======== */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(37,117,252,0.4);
+    }
+
+    /* ======== TEXTO DE CAMBIO ======== */
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #2575fc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #6a11cb;
+    }
+
+    /* ======== MENSAJES ======== */
+    .mensaje {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 10px;
+      display: none;
+      font-weight: 500;
+    }
+
+    .exito {
+      background-color: #d4edda;
+      color: #155724;
+      display: block;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <main class="container">
-    <header class="header">
-      <h1>Auth Service (Frontend)</h1>
-      <nav>
-        <button id="btn-show-login" class="nav-btn">Iniciar sesión</button>
-        <button id="btn-show-register" class="nav-btn">Registrarse</button>
-        <button id="btn-logout" class="nav-btn hidden">Cerrar sesión</button>
-      </nav>
-    </header>
+  <div class="container" id="auth-container">
+    <h2 id="titulo">Iniciar Sesión</h2>
+    <input type="text" id="usuario" placeholder="Usuario">
+    <input type="password" id="contraseña" placeholder="Contraseña">
+    <button onclick="login()">Ingresar</button>
+    <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a></p>
+    <div id="mensaje" class="mensaje"></div>
+  </div>
 
-    <section id="messages" class="messages" aria-live="polite"></section>
+  <script>
+    const API_URL = "http://localhost:3000/api/auth";
+    let modoRegistro = false;
 
-    <!-- LOGIN -->
-    <section id="login-section" class="card">
-      <h2>Iniciar sesión</h2>
-      <form id="login-form">
-        <label>
-          Usuario
-          <input type="text" name="usuario" id="login-usuario" required />
-        </label>
+    function mostrarRegistro() {
+      const contenedor = document.getElementById("auth-container");
+      const titulo = document.getElementById("titulo");
+      const boton = contenedor.querySelector("button");
+      const texto = contenedor.querySelector("p");
+      const mensaje = document.getElementById("mensaje");
 
-        <label>
-          Contraseña
-          <input type="password" name="contraseña" id="login-contraseña" required />
-        </label>
+      modoRegistro = !modoRegistro;
+      mensaje.style.display = "none";
 
-        <button type="submit" class="btn">Entrar</button>
-      </form>
-    </section>
+      if (modoRegistro) {
+        titulo.innerText = "Registrar Usuario";
+        boton.innerText = "Registrar";
+        texto.innerHTML = '¿Ya tienes cuenta? <a href="#" onclick="mostrarRegistro()">Inicia sesión aquí</a>';
+        boton.onclick = registrar;
+      } else {
+        titulo.innerText = "Iniciar Sesión";
+        boton.innerText = "Ingresar";
+        texto.innerHTML = '¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a>';
+        boton.onclick = login;
+      }
+    }
 
-    <!-- REGISTER -->
-    <section id="register-section" class="card hidden">
-      <h2>Registrarse</h2>
-      <form id="register-form">
-        <label>
-          Usuario
-          <input type="text" name="usuario" id="reg-usuario" required />
-        </label>
+    async function registrar() {
+      const usuario = document.getElementById("usuario").value.trim();
+      const contraseña = document.getElementById("contraseña").value.trim();
+      const mensaje = document.getElementById("mensaje");
 
-        <label>
-          Contraseña
-          <input type="password" name="contraseña" id="reg-contraseña" required minlength="6" />
-        </label>
+      if (!usuario || !contraseña) {
+        mostrarMensaje("Por favor llena todos los campos.", false);
+        return;
+      }
 
-        <label>
-          Confirmar contraseña
-          <input type="password" id="reg-contraseña2" required minlength="6" />
-        </label>
+      try {
+        const res = await fetch(`${API_URL}/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario, contraseña })
+        });
 
-        <button type="submit" class="btn">Crear cuenta</button>
-      </form>
-    </section>
+        const data = await res.json();
 
-    <!-- DASHBOARD / ÁREA PROTEGIDA -->
-    <section id="dashboard-section" class="card hidden">
-      <h2>Panel de Usuario</h2>
-      <p>Bienvenido, <span id="user-name"></span></p>
-      <p>Token (guardado en localStorage):</p>
-      <pre id="user-token" class="token-box"></pre>
+        if (res.ok) {
+          mostrarMensaje("✅ Registro exitoso. Ahora puedes iniciar sesión.", true);
+          setTimeout(mostrarRegistro, 2000);
+        } else {
+          mostrarMensaje("⚠️ " + data.error, false);
+        }
+      } catch (error) {
+        mostrarMensaje("Error al conectar con el servidor.", false);
+      }
+    }
 
-      <div class="actions">
-        <button id="btn-refresh" class="btn">Refrescar datos</button>
-      </div>
+    async function login() {
+      const usuario = document.getElementById("usuario").value.trim();
+      const contraseña = document.getElementById("contraseña").value.trim();
 
-      <div id="protected-data" class="protected-data"></div>
-    </section>
+      if (!usuario || !contraseña) {
+        mostrarMensaje("Por favor llena todos los campos.", false);
+        return;
+      }
 
-    <footer class="footer">
-      <small>Frontend simple para el servicio de autenticación — Proyecto SENA</small>
-    </footer>
-  </main>
+      try {
+        const res = await fetch(`${API_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario, contraseña })
+        });
 
-  <script src="app.js"></script>
+        const data = await res.json();
+
+        if (res.ok) {
+          mostrarMensaje("✅ " + data.mensaje, true);
+          localStorage.setItem("token", data.token);
+          setTimeout(() => alert("Sesión iniciada correctamente."), 1000);
+        } else {
+          mostrarMensaje("⚠️ " + data.error, false);
+        }
+      } catch (error) {
+        mostrarMensaje("Error al conectar con el servidor.", false);
+      }
+    }
+
+    function mostrarMensaje(texto, exito = true) {
+      const mensaje = document.getElementById("mensaje");
+      mensaje.innerText = texto;
+      mensaje.className = "mensaje " + (exito ? "exito" : "error");
+      mensaje.style.display = "block";
+    }
+  </script>
 </body>
 </html>
+
